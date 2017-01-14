@@ -11,3 +11,7 @@ autorun(() => {
   toJS(location)  // runs every time browser location changes
 })
 ```
+
+## Browser support
+
+same as html5 history api-so with that shim even IE9
