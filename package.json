@@ -1,7 +1,7 @@
 {
   "name": "mobx-location",
   "version": "0.1.0",
-  "description": " minimal wrapper around browser history utilizing popstate event of HTML5 history api",
+  "description": " minimal observable wrapper around browser history utilizing popstate event of HTML5 history api",
   "main": "mobx-location.js",
   "scripts": {
     "pretest": "standard",
