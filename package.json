@@ -1,0 +1,48 @@
+{
+  "name": "mobx-location",
+  "version": "0.1.0",
+  "description": " minimal wrapper around browser history utilizing popstate event of HTML5 history api",
+  "main": "mobx-location.js",
+  "scripts": {
+    "pretest": "standard",
+    "lintfix": "standard --fix",
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/capaj/mobx-location.git"
+  },
+  "keywords": [
+    "html5",
+    "location",
+    "history"
+  ],
+  "author": "capajj@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/capaj/mobx-location/issues"
+  },
+  "homepage": "https://github.com/capaj/mobx-location#readme",
+  "peerDependencies": {
+    "mobx": "^3.0.0"
+  },
+  "devDependencies": {
+    "ava": "^0.17.0",
+    "babel-preset-es2015": "^6.18.0",
+    "browser-env": "^2.0.19",
+    "mobx": "^3.0.0",
+    "standard": "^8.6.0"
+  },
+  "ava": {
+    "files": [
+      "*.spec.js"
+    ],
+    "require": [
+      "babel-register",
+      "./ava-init.js"
+    ],
+    "babel": {
+      "presets": ["es2015"]
+    }
+  }
+}
