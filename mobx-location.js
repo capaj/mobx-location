@@ -1,28 +1,24 @@
-const mobx = require('mobx')
+'use strict';
 
-const propsToMirror = [
-  'hash',
-  'host',
-  'hostname',
-  'href',
-  'origin',
-  'pathname',
-  'port',
-  'protocol',
-  'search'
-]
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-function createSnapshot () {
-  return propsToMirror.reduce((snapshot, prop) => {
-    snapshot[prop] = window.location[prop]
-    return snapshot
-  }, {})
-}
+var _mobx = require('mobx');
 
-const locationObservable = mobx.observable(createSnapshot())
+var propsToMirror = ['hash', 'host', 'hostname', 'href', 'origin', 'pathname', 'port', 'protocol', 'search'];
 
-window.addEventListener('popstate', mobx.action('popstateHandler', (ev) => {
-  Object.assign(locationObservable, createSnapshot())
-}))
+var createSnapshot = function createSnapshot() {
+  return propsToMirror.reduce(function (snapshot, prop) {
+    snapshot[prop] = window.location[prop];
+    return snapshot;
+  }, {});
+};
 
-module.exports = locationObservable
+var locationObservable = (0, _mobx.observable)(createSnapshot());
+
+window.addEventListener('popstate', (0, _mobx.action)('popstateHandler', function (ev) {
+  Object.assign(locationObservable, createSnapshot());
+}));
+
+exports.default = locationObservable;

@@ -1,12 +1,14 @@
 {
   "name": "mobx-location",
-  "version": "0.1.0",
-  "description": " minimal observable wrapper around browser history utilizing popstate event of HTML5 history api",
+  "version": "0.1.1",
+  "description": "minimal observable wrapper around browser history utilizing popstate event of HTML5 history api",
   "main": "mobx-location.js",
   "scripts": {
+    "build": "babel ./src/mobx-location.js --out-file mobx-location.js",
     "pretest": "standard",
     "lintfix": "standard --fix",
-    "test": "ava"
+    "test": "ava",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -28,10 +30,16 @@
   },
   "devDependencies": {
     "ava": "^0.17.0",
+    "babel-cli": "^6.18.0",
     "babel-preset-es2015": "^6.18.0",
     "browser-env": "^2.0.19",
     "mobx": "^3.0.0",
     "standard": "^8.6.0"
+  },
+  "standard": {
+    "ignore": [
+      "mobx-location.js"
+    ]
   },
   "ava": {
     "files": [
@@ -41,8 +49,6 @@
       "babel-register",
       "./ava-init.js"
     ],
-    "babel": {
-      "presets": ["es2015"]
-    }
+    "babel": "inherit"
   }
 }
