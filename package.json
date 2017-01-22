@@ -2,6 +2,7 @@
   "name": "mobx-location",
   "version": "0.1.1",
   "description": "minimal observable wrapper around browser history utilizing popstate event of HTML5 history api",
+  "module": "src/mobx-location.js",
   "main": "mobx-location.js",
   "scripts": {
     "build": "babel ./src/mobx-location.js --out-file mobx-location.js",
