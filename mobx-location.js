@@ -6,19 +6,27 @@ Object.defineProperty(exports, "__esModule", {
 
 var _mobx = require('mobx');
 
+var _queryString = require('query-string');
+
+var _queryString2 = _interopRequireDefault(_queryString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var propsToMirror = ['hash', 'host', 'hostname', 'href', 'origin', 'pathname', 'port', 'protocol', 'search'];
 
 var createSnapshot = function createSnapshot() {
-  return propsToMirror.reduce(function (snapshot, prop) {
+  var snapshot = propsToMirror.reduce(function (snapshot, prop) {
     snapshot[prop] = window.location[prop];
     return snapshot;
   }, {});
+  snapshot.query = _queryString2.default.parse(snapshot.search);
+  return snapshot;
 };
-
-var locationObservable = (0, _mobx.observable)(createSnapshot());
+var firstSnapshot = createSnapshot();
+var locationObservable = (0, _mobx.observable)(firstSnapshot);
 
 window.addEventListener('popstate', (0, _mobx.action)('popstateHandler', function (ev) {
-  Object.assign(locationObservable, createSnapshot());
+  (0, _mobx.extendObservable)(locationObservable, createSnapshot());
 }));
 
 exports.default = locationObservable;

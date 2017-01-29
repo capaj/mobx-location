@@ -12,6 +12,22 @@ autorun(() => {
 })
 ```
 
+location has all the standard properties:
+```
+hash
+host
+hostname
+href
+origin
+pathname
+port
+protocol
+search
+```
+
+plus one extra- `query`. Query is just parsed `location.search`. Query is always there even if no search params are in your loaction.
+
+
 ## Browser support
 
 same as html5 history api-so with that shim even IE9

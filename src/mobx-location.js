@@ -1,4 +1,5 @@
-import {action, observable} from 'mobx'
+import {extendObservable, observable, action} from 'mobx'
+import queryString from 'query-string'
 
 const propsToMirror = [
   'hash',
@@ -13,16 +14,18 @@ const propsToMirror = [
 ]
 
 const createSnapshot = function () {
-  return propsToMirror.reduce((snapshot, prop) => {
+  const snapshot = propsToMirror.reduce((snapshot, prop) => {
     snapshot[prop] = window.location[prop]
     return snapshot
   }, {})
+  snapshot.query = queryString.parse(snapshot.search)
+  return snapshot
 }
-
-const locationObservable = observable(createSnapshot())
+const firstSnapshot = createSnapshot()
+const locationObservable = observable(firstSnapshot)
 
 window.addEventListener('popstate', action('popstateHandler', (ev) => {
-  Object.assign(locationObservable, createSnapshot())
+  extendObservable(locationObservable, createSnapshot())
 }))
 
 export default locationObservable
