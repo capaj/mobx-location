@@ -25,7 +25,7 @@ protocol
 search
 ```
 
-plus one extra- `query`. Query is just parsed `location.search`. Query is always there even if no search params are in your loaction.
+plus one extra- `query`. Query is just parsed `location.search`. Query is always there even if no search params are in your location.
 
 
 ## Browser support
