@@ -1,5 +1,5 @@
 # mobx-location
-just location as a mobx observable. Very minimal wrapper around browser history utilizing popstate event of HTML5 history api
+just location as a mobx observable. Minimal wrapper around browser history utilizing popstate event and monkeypatching HTML5 history api
 
 Prime usage is in your observers. You can directly access the location and your app will rerender itself without the need for react-router or similar solution.
 
