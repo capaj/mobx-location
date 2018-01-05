@@ -10,6 +10,8 @@ var _queryString = require('query-string');
 
 var _queryString2 = _interopRequireDefault(_queryString);
 
+require('history-events');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var propsToMirror = ['hash', 'host', 'hostname', 'href', 'origin', 'pathname', 'port', 'protocol', 'search'];
@@ -25,7 +27,7 @@ var createSnapshot = function createSnapshot() {
 var firstSnapshot = createSnapshot();
 var locationObservable = (0, _mobx.observable)(firstSnapshot);
 
-window.addEventListener('popstate', (0, _mobx.action)('popstateHandler', function (ev) {
+window.addEventListener('changestate', (0, _mobx.action)('changestateHandler', function (ev) {
   (0, _mobx.extendObservable)(locationObservable, createSnapshot());
 }));
 
