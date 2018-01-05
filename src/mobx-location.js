@@ -1,5 +1,6 @@
-import {extendObservable, observable, action} from 'mobx'
+import { extendObservable, observable, action } from 'mobx'
 import queryString from 'query-string'
+import 'history-events'
 
 const propsToMirror = [
   'hash',
@@ -13,7 +14,7 @@ const propsToMirror = [
   'search'
 ]
 
-const createSnapshot = function () {
+const createSnapshot = function() {
   const snapshot = propsToMirror.reduce((snapshot, prop) => {
     snapshot[prop] = window.location[prop]
     return snapshot
@@ -24,8 +25,11 @@ const createSnapshot = function () {
 const firstSnapshot = createSnapshot()
 const locationObservable = observable(firstSnapshot)
 
-window.addEventListener('popstate', action('popstateHandler', (ev) => {
-  extendObservable(locationObservable, createSnapshot())
-}))
+window.addEventListener(
+  'changestate',
+  action('changestateHandler', ev => {
+    extendObservable(locationObservable, createSnapshot())
+  })
+)
 
 export default locationObservable
