@@ -14,14 +14,20 @@ const bundler = new Bundler('test/index.html')
 
   // Get the "viewport" of the page, as reported by the page.
   const tests = await page.evaluate(() => {
-    return [window.mobxLocation.query.someQuery === '1']
+    const initial = window.mobxLocation.query.someQuery === '1'
+
+    history.pushState(null, null, '?someQuery=2')
+
+    return [initial, window.mobxLocation.query.someQuery === '2']
   })
-  for (let result of tests) {
-    if (!result) {
-      console.error('a test failed')
-      await exit(1)
-    }
-  }
+  await Promise.all(
+    tests.map(async (testResult, index) => {
+      if (!testResult) {
+        console.error(`a test ${index} failed`)
+        await exit(1)
+      }
+    })
+  )
 
   console.log('test passed')
   await exit()

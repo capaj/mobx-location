@@ -1,4 +1,4 @@
-import { extendObservable, observable, action } from 'mobx'
+import { set, observable, action } from 'mobx'
 import queryString from 'query-string'
 import 'history-events'
 
@@ -28,7 +28,7 @@ const locationObservable = observable(firstSnapshot)
 window.addEventListener(
   'changestate',
   action('changestateHandler', ev => {
-    extendObservable(locationObservable, createSnapshot())
+    set(locationObservable, createSnapshot())
   })
 )
 
