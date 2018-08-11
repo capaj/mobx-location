@@ -33,3 +33,5 @@ test('it has query object', t => {
   t.is(location.query.redirect, undefined)
   t.is(location.query.other, '1')
 })
+
+test('it changes query when we change the observable', t => {})

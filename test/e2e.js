@@ -17,13 +17,16 @@ const bundler = new Bundler('test/index.html')
     const initial = window.mobxLocation.query.someQuery === '1'
 
     history.pushState(null, null, '?someQuery=2')
+    const secondAssert = window.mobxLocation.query.someQuery === '2'
+    window.mobxLocation.query.someQuery = 3
+    const thirdAssert = window.mobxLocation.query.someQuery === '3'
 
-    return [initial, window.mobxLocation.query.someQuery === '2']
+    return [initial, secondAssert, thirdAssert]
   })
   await Promise.all(
     tests.map(async (testResult, index) => {
       if (!testResult) {
-        console.error(`a test ${index} failed`)
+        console.error(`a test ${index + 1} failed`)
         await exit(1)
       }
     })
