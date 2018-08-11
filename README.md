@@ -30,6 +30,7 @@ search
 plus one extra- `query`. Query is just parsed `location.search`. Query is always there even if no search params are in your location.
 
 If you modify the query object, it will propagate back to the window location so you don't have to construct the search params yourself when modifying.
+Keep in mind that any newly added property in `query` won't be picked up-you must use `set` from `import {set} from 'mobx'` to set new props.
 
 ## Browser support
 
