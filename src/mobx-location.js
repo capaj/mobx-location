@@ -47,6 +47,10 @@ const snapshotAndSet = action('changestateHandler', ev => {
 })
 
 observe(locationObservable, change => {
+  const { name } = change
+  if (name === 'query') {
+    return // we ignore these
+  }
   if (location[change.name] !== change.newValue) {
     const { search, protocol, host, pathname } = locationObservable
     const newUrl = protocol + '//' + host + pathname + search
