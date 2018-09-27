@@ -20,7 +20,15 @@ const createSnapshot = function() {
     snapshot[prop] = location[prop]
     return snapshot
   }, {})
-  const q = queryString.parse(snapshot.search)
+  let q
+  if (snapshot.search) {
+    q = queryString.parse(snapshot.search)
+  } else if (snapshot.hash.includes('?')) {
+    q = queryString.parse(snapshot.hash.split('?')[1])
+  } else {
+    q = {}
+  }
+
   snapshot.query = q
 
   return snapshot
@@ -29,14 +37,34 @@ const firstSnapshot = createSnapshot()
 const locationObservable = observable(firstSnapshot)
 
 const propagateQueryToLocationSearch = () => {
-  const currentSearch = `?${queryString.stringify(
+  // console.log('locationObservable.query: ', locationObservable.query)
+
+  const currentlyInObservable = `?${queryString.stringify(
     toJS(locationObservable.query)
   )}`
-  const { search, protocol, host, pathname } = location
+  // console.log('currentlyInObservable: ', currentlyInObservable)
+  const { search, protocol, host, pathname, hash } = location
+  let qs = search
+  const isInHash = !qs && hash.includes('?')
+  let hashParts
+  if (isInHash) {
+    hashParts = hash.split('?')
+    qs = `?${hashParts[1]}`
+  }
+  if (!qs && currentlyInObservable === '?') {
+    return
+  }
+  if (qs !== currentlyInObservable) {
+    let newUrl = protocol + '//' + host + pathname
+    if (isInHash) {
+      newUrl += hashParts[0] + currentlyInObservable
+    } else {
+      newUrl += currentlyInObservable + hash
+    }
+    window.removeEventListener('changestate', snapshotAndSet)
 
-  if (search !== currentSearch) {
-    const newUrl = protocol + '//' + host + pathname + currentSearch
-    history.pushState(null, '', newUrl)
+    history.replaceState(null, '', newUrl)
+    window.addEventListener('changestate', snapshotAndSet)
   }
 }
 
@@ -52,8 +80,8 @@ observe(locationObservable, change => {
     return // we ignore these
   }
   if (location[change.name] !== change.newValue) {
-    const { search, protocol, host, pathname } = locationObservable
-    const newUrl = protocol + '//' + host + pathname + search
+    const { search, protocol, host, pathname, hash } = locationObservable
+    const newUrl = protocol + '//' + host + pathname + search + hash
     window.removeEventListener('changestate', snapshotAndSet)
     if (change.name === 'search') {
       unsubscribe()
