@@ -15,56 +15,54 @@ const propsToMirror = [
 ]
 const { location } = window
 
-const createSnapshot = function() {
-  const snapshot = propsToMirror.reduce((snapshot, prop) => {
-    snapshot[prop] = location[prop]
+export default ({ hashHistory }) => {
+  const createSnapshot = function() {
+    const snapshot = propsToMirror.reduce((snapshot, prop) => {
+      snapshot[prop] = location[prop]
+      return snapshot
+    }, {})
+    let q
+
+    if (hashHistory) {
+      q = queryString.parse(snapshot.hash.split('?')[1])
+    } else {
+      q = queryString.parse(snapshot.search)
+    }
+
+    snapshot.query = q || {}
+
     return snapshot
-  }, {})
-  let q
-  if (snapshot.search) {
-    q = queryString.parse(snapshot.search)
-  } else if (snapshot.hash.includes('?')) {
-    q = queryString.parse(snapshot.hash.split('?')[1])
-  } else {
-    q = {}
   }
 
-  snapshot.query = q
-
-  return snapshot
-}
-
-export default ({ hashHistory }) => {
   const firstSnapshot = createSnapshot()
   const locationObservable = observable(firstSnapshot)
 
   const propagateQueryToLocationSearch = () => {
-    // console.log('locationObservable.query: ', locationObservable.query)
+    console.log('locationObservable.query: ', toJS(locationObservable.query))
 
-    const currentlyInObservable = `?${queryString.stringify(
+    const queryInObservable = queryString.stringify(
       toJS(locationObservable.query)
-    )}`
+    )
     // console.log('currentlyInObservable: ', currentlyInObservable)
     const { search, protocol, host, pathname, hash } = location
     let qs = search
 
-    let hashParts
-    if (hashHistory) {
-      hashParts = hash.split('?')
-      qs = `?${hashParts[1]}`
+    const hashParts = hash.split('?')
+    if (hashHistory && hash.includes('?')) {
+      qs = hashParts[1]
     }
-    if (!qs && currentlyInObservable === '?') {
+    if (!qs && !queryInObservable) {
       return
     }
-    if (qs !== currentlyInObservable) {
+    if (qs !== queryInObservable) {
       let newUrl = protocol + '//' + host + pathname
       if (hashHistory) {
-        newUrl += hashParts[0] + currentlyInObservable
+        newUrl += hashParts[0] + '?' + queryInObservable
       } else {
-        newUrl += currentlyInObservable + hash
+        newUrl += '?' + queryInObservable + hash
       }
       window.removeEventListener('changestate', snapshotAndSet)
-
+      // console.log('newUrl: ', newUrl)
       history.replaceState(null, '', newUrl)
       window.addEventListener('changestate', snapshotAndSet)
     }

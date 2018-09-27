@@ -1,6 +1,6 @@
 {
   "name": "mobx-location",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "minimal observable wrapper around browser location utilizing popstate event of HTML5 history api",
   "module": "dist/mobx-location.es.js",
   "main": "dist/mobx-location.cjs.js",
@@ -26,13 +26,13 @@
   },
   "homepage": "https://github.com/capaj/mobx-location#readme",
   "peerDependencies": {
-    "mobx": "^4.4.2"
+    "mobx": "^4"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.0",
     "@babel/core": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
-    "mobx": "^4.4.2",
+    "mobx": "^4.5.0",
     "parcel-bundler": "^1.10.0",
     "puppeteer": "^1.8.0",
     "rollup": "^0.66.2",
