@@ -33,67 +33,70 @@ const createSnapshot = function() {
 
   return snapshot
 }
-const firstSnapshot = createSnapshot()
-const locationObservable = observable(firstSnapshot)
 
-const propagateQueryToLocationSearch = () => {
-  // console.log('locationObservable.query: ', locationObservable.query)
+export default ({ hashHistory }) => {
+  const firstSnapshot = createSnapshot()
+  const locationObservable = observable(firstSnapshot)
 
-  const currentlyInObservable = `?${queryString.stringify(
-    toJS(locationObservable.query)
-  )}`
-  // console.log('currentlyInObservable: ', currentlyInObservable)
-  const { search, protocol, host, pathname, hash } = location
-  let qs = search
-  const isInHash = !qs && hash.includes('?')
-  let hashParts
-  if (isInHash) {
-    hashParts = hash.split('?')
-    qs = `?${hashParts[1]}`
-  }
-  if (!qs && currentlyInObservable === '?') {
-    return
-  }
-  if (qs !== currentlyInObservable) {
-    let newUrl = protocol + '//' + host + pathname
-    if (isInHash) {
-      newUrl += hashParts[0] + currentlyInObservable
-    } else {
-      newUrl += currentlyInObservable + hash
+  const propagateQueryToLocationSearch = () => {
+    // console.log('locationObservable.query: ', locationObservable.query)
+
+    const currentlyInObservable = `?${queryString.stringify(
+      toJS(locationObservable.query)
+    )}`
+    // console.log('currentlyInObservable: ', currentlyInObservable)
+    const { search, protocol, host, pathname, hash } = location
+    let qs = search
+
+    let hashParts
+    if (hashHistory) {
+      hashParts = hash.split('?')
+      qs = `?${hashParts[1]}`
     }
-    window.removeEventListener('changestate', snapshotAndSet)
+    if (!qs && currentlyInObservable === '?') {
+      return
+    }
+    if (qs !== currentlyInObservable) {
+      let newUrl = protocol + '//' + host + pathname
+      if (hashHistory) {
+        newUrl += hashParts[0] + currentlyInObservable
+      } else {
+        newUrl += currentlyInObservable + hash
+      }
+      window.removeEventListener('changestate', snapshotAndSet)
 
-    history.replaceState(null, '', newUrl)
-    window.addEventListener('changestate', snapshotAndSet)
+      history.replaceState(null, '', newUrl)
+      window.addEventListener('changestate', snapshotAndSet)
+    }
   }
+
+  let unsubscribe = autorun(propagateQueryToLocationSearch)
+
+  const snapshotAndSet = action('changestateHandler', ev => {
+    set(locationObservable, createSnapshot())
+  })
+
+  observe(locationObservable, change => {
+    const { name } = change
+    if (name === 'query') {
+      return // we ignore these
+    }
+    if (location[change.name] !== change.newValue) {
+      const { search, protocol, host, pathname, hash } = locationObservable
+      const newUrl = protocol + '//' + host + pathname + search + hash
+      window.removeEventListener('changestate', snapshotAndSet)
+      if (change.name === 'search') {
+        unsubscribe()
+
+        locationObservable.query = queryString.parse(change.newValue)
+        unsubscribe = autorun(propagateQueryToLocationSearch)
+      }
+      history.pushState(null, '', newUrl)
+      window.addEventListener('changestate', snapshotAndSet)
+    }
+  })
+
+  window.addEventListener('changestate', snapshotAndSet)
+
+  return locationObservable
 }
-
-let unsubscribe = autorun(propagateQueryToLocationSearch)
-
-const snapshotAndSet = action('changestateHandler', ev => {
-  set(locationObservable, createSnapshot())
-})
-
-observe(locationObservable, change => {
-  const { name } = change
-  if (name === 'query') {
-    return // we ignore these
-  }
-  if (location[change.name] !== change.newValue) {
-    const { search, protocol, host, pathname, hash } = locationObservable
-    const newUrl = protocol + '//' + host + pathname + search + hash
-    window.removeEventListener('changestate', snapshotAndSet)
-    if (change.name === 'search') {
-      unsubscribe()
-
-      locationObservable.query = queryString.parse(change.newValue)
-      unsubscribe = autorun(propagateQueryToLocationSearch)
-    }
-    history.pushState(null, '', newUrl)
-    window.addEventListener('changestate', snapshotAndSet)
-  }
-})
-
-window.addEventListener('changestate', snapshotAndSet)
-
-export default locationObservable

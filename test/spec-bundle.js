@@ -1,6 +1,10 @@
-import mobxLocation from '../src/mobx-location'
-import { set } from 'mobx'
+import makeMobxLocation from '../src/mobx-location'
+import { set, autorun, toJS } from 'mobx'
 
-window.mobxLocation = mobxLocation
-mobxLocation.hash = '#/aa?'
+window.mobxLocation = makeMobxLocation({ hashHistory: true })
+mobxLocation.hash = '#/aagg'
 set(mobxLocation.query, { foo: new Date().toISOString() })
+
+autorun(() => {
+  console.log('autorun', toJS(mobxLocation))
+})

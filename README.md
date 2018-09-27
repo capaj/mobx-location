@@ -5,8 +5,11 @@ a browser location as a mobx observable. Minimal wrapper around browser history 
 Prime usage is in your mobx observers. You can directly access the location and your app will rerender itself without the need for react-router or similar solution.
 
 ```javascript
-import location from './mobx-location'
+import makeMobxLocation from './mobx-location'
 import { autorun, toJS } from 'mobx'
+
+const mobxLocation = makeMobxLocation({ hashHistory: false })
+const mobxLocation = makeMobxLocation({ hashHistory: true }) // when you use hash history instead of html5 history APIs
 
 autorun(() => {
   toJS(location) // runs every time browser location changes
