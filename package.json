@@ -1,6 +1,6 @@
 {
   "name": "mobx-location",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "minimal observable wrapper around browser location utilizing popstate event of HTML5 history api",
   "module": "dist/mobx-location.es.js",
   "main": "dist/mobx-location.cjs.js",

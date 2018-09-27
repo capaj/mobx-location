@@ -37,11 +37,13 @@ export default ({ hashHistory }) => {
   const firstSnapshot = createSnapshot()
   const locationObservable = observable(firstSnapshot)
 
+  /**
+   * executes each time a mobxLocation.query is mutated
+   */
   const propagateQueryToLocationSearch = () => {
-    console.log('locationObservable.query: ', toJS(locationObservable.query))
-
     const queryInObservable = queryString.stringify(
-      toJS(locationObservable.query)
+      toJS(locationObservable.query),
+      { encode: false }
     )
     // console.log('currentlyInObservable: ', currentlyInObservable)
     const { search, protocol, host, pathname, hash } = location
