@@ -15,7 +15,7 @@ const propsToMirror = [
 ]
 const { location } = window
 
-export default ({ hashHistory }) => {
+export default ({ hashHistory, arrayFormat = 'bracket' }) => {
   const createSnapshot = function() {
     const snapshot = propsToMirror.reduce((snapshot, prop) => {
       snapshot[prop] = location[prop]
@@ -24,9 +24,9 @@ export default ({ hashHistory }) => {
     let q
 
     if (hashHistory) {
-      q = queryString.parse(snapshot.hash.split('?')[1])
+      q = queryString.parse(snapshot.hash.split('?')[1], { arrayFormat })
     } else {
-      q = queryString.parse(snapshot.search)
+      q = queryString.parse(snapshot.search, { arrayFormat })
     }
 
     snapshot.query = q || {}
@@ -43,7 +43,7 @@ export default ({ hashHistory }) => {
   const propagateQueryToLocationSearch = () => {
     const queryInObservable = queryString.stringify(
       toJS(locationObservable.query),
-      { encode: false }
+      { encode: false, arrayFormat }
     )
     // console.log('currentlyInObservable: ', currentlyInObservable)
     const { search, protocol, host, pathname, hash } = location
@@ -88,7 +88,9 @@ export default ({ hashHistory }) => {
       if (change.name === 'search') {
         unsubscribe()
 
-        locationObservable.query = queryString.parse(change.newValue)
+        locationObservable.query = queryString.parse(change.newValue, {
+          arrayFormat
+        })
         unsubscribe = autorun(propagateQueryToLocationSearch)
       }
       history.pushState(null, '', newUrl)

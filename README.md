@@ -8,8 +8,11 @@ Prime usage is in your mobx observers. You can directly access the location and 
 import makeMobxLocation from './mobx-location'
 import { autorun, toJS } from 'mobx'
 
-const mobxLocation = makeMobxLocation({ hashHistory: false })
+const mobxLocation = makeMobxLocation({ hashHistory: false }) // default
 const mobxLocation = makeMobxLocation({ hashHistory: true }) // when you use hash history instead of html5 history APIs
+
+const mobxLocation = makeMobxLocation({ arrayFormat: 'bracket' }) // default
+const mobxLocation = makeMobxLocation({ arrayFormat: 'index' }) // will index array params in the url, refer to https://www.npmjs.com/package/query-string#arrayformat
 
 autorun(() => {
   toJS(location) // runs every time browser location changes

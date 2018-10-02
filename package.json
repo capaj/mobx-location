@@ -1,6 +1,6 @@
 {
   "name": "mobx-location",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "minimal observable wrapper around browser location utilizing popstate event of HTML5 history api",
   "module": "dist/mobx-location.es.js",
   "main": "dist/mobx-location.cjs.js",
@@ -33,13 +33,13 @@
     "@babel/core": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
     "mobx": "^4.5.0",
-    "parcel-bundler": "^1.10.0",
+    "parcel-bundler": "^1.10.1",
     "puppeteer": "^1.8.0",
     "rollup": "^0.66.2",
     "rollup-plugin-babel": "^4.0.3"
   },
   "dependencies": {
     "history-events": "^1.0.4",
-    "query-string": "^6.1.0"
+    "query-string": "^6.2.0"
   }
 }
