@@ -56,6 +56,9 @@ export default ({ hashHistory, arrayFormat = 'bracket' }) => {
     if (!qs && !queryInObservable) {
       return
     }
+    if (decodeURI(qs) === queryInObservable) {
+      return
+    }
     if (qs !== queryInObservable) {
       let newUrl = protocol + '//' + host + pathname
       if (hashHistory) {

@@ -5,6 +5,11 @@ const bundler = new Bundler('test/index.html')
   const server = await bundler.serve(4051)
   const browser = await puppeteer.launch()
   const page = await browser.newPage()
+
+  page.on('console', msg => {
+    console.log(msg._text)
+  })
+
   const exit = async code => {
     bundler.stop()
     await browser.close()
@@ -14,12 +19,16 @@ const bundler = new Bundler('test/index.html')
 
   // Get the "viewport" of the page, as reported by the page.
   const tests = await page.evaluate(() => {
-    const initial = window.mobxLocation.query.someQuery === '1'
+    const { query } = mobxLocation
+    const initial = query.someQuery === '1'
 
     history.pushState(null, null, '?someQuery=2')
-    const secondAssert = window.mobxLocation.query.someQuery === '2'
-    window.mobxLocation.query.someQuery = 3
-    const thirdAssert = window.mobxLocation.query.someQuery === '3'
+    const secondAssert = query.someQuery === '2'
+    console.log('bb', JSON.stringify(query), location.search)
+
+    query.someQuery = 3
+    console.log('aaa', JSON.stringify(query))
+    const thirdAssert = query.someQuery === 3
 
     return [initial, secondAssert, thirdAssert]
   })
