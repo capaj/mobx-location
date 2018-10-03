@@ -1,6 +1,6 @@
 {
   "name": "mobx-location",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "minimal observable wrapper around browser location utilizing popstate event of HTML5 history api",
   "module": "dist/mobx-location.es.js",
   "main": "dist/mobx-location.cjs.js",
@@ -8,7 +8,7 @@
     "build": "rollup -c",
     "test": "node test/e2e.js",
     "e2e": "cd test && parcel index.html",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -29,8 +29,8 @@
     "mobx": "^4"
   },
   "devDependencies": {
-    "@babel/cli": "^7.1.0",
-    "@babel/core": "^7.1.0",
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
     "mobx": "^4.5.0",
     "parcel-bundler": "^1.10.1",

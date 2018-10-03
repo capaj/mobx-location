@@ -16,7 +16,7 @@ const propsToMirror = [
 const { location } = window
 
 export default ({ hashHistory, arrayFormat = 'bracket' }) => {
-  const createSnapshot = function() {
+  const createSnapshot = (previousQuery) => {
     const snapshot = propsToMirror.reduce((snapshot, prop) => {
       snapshot[prop] = location[prop]
       return snapshot
@@ -62,10 +62,18 @@ export default ({ hashHistory, arrayFormat = 'bracket' }) => {
     if (qs !== queryInObservable) {
       let newUrl = protocol + '//' + host + pathname
       if (hashHistory) {
-        newUrl += hashParts[0] + '?' + queryInObservable
+        const newHash = hashParts[0] + '?' + queryInObservable
+
+        locationObservable.hash = newHash
+        newUrl += newHash
       } else {
-        newUrl += '?' + queryInObservable + hash
+        const newSearch = '?' + queryInObservable + hash
+
+        locationObservable.search = newSearch
+        newUrl += newSearch
       }
+      locationObservable.href = newUrl
+
       window.removeEventListener('changestate', snapshotAndSet)
       // console.log('newUrl: ', newUrl)
       history.replaceState(null, '', newUrl)
@@ -75,11 +83,20 @@ export default ({ hashHistory, arrayFormat = 'bracket' }) => {
 
   let unsubscribe = autorun(propagateQueryToLocationSearch)
 
-  const snapshotAndSet = action('changestateHandler', ev => {
-    set(locationObservable, createSnapshot())
+  const snapshotAndSet = action('changestateHandler', (ev) => {
+    const snapshot = createSnapshot(toJS(locationObservable.query))
+    const currentlyInObservable = toJS(locationObservable)
+    //unfortunately we need to check that the new snapshot is different-for example when integrating with angularjs it happens that angular router is setting a URL again after we changed it via interacting with observable
+
+    if (
+      snapshot.href !== currentlyInObservable &&
+      decodeURI(snapshot.href) !== locationObservable.href
+    ) {
+      set(locationObservable, snapshot)
+    }
   })
 
-  observe(locationObservable, change => {
+  observe(locationObservable, (change) => {
     const { name } = change
     if (name === 'query') {
       return // we ignore these
