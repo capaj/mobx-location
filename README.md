@@ -15,7 +15,7 @@ const mobxLocation = makeMobxLocation({ arrayFormat: 'bracket' }) // default
 const mobxLocation = makeMobxLocation({ arrayFormat: 'index' }) // will index array params in the url, refer to https://www.npmjs.com/package/query-string#arrayformat
 
 autorun(() => {
-  toJS(location) // runs every time browser location changes
+  toJS(mobxLocation) // runs every time browser location changes
 })
 ```
 
