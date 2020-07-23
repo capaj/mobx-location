@@ -43,7 +43,7 @@ export default ({ hashHistory, arrayFormat = 'bracket' }) => {
   const propagateQueryToLocationSearch = () => {
     const queryInObservable = queryString.stringify(
       toJS(locationObservable.query),
-      { encode: false, arrayFormat }
+      { encode: true, arrayFormat }
     )
     // console.log('currentlyInObservable: ', currentlyInObservable)
     const { search, protocol, host, pathname, hash } = location
