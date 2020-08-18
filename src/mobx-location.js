@@ -81,8 +81,6 @@ export default ({ hashHistory, arrayFormat = 'bracket' }) => {
     }
   }
 
-  let unsubscribe = autorun(propagateQueryToLocationSearch)
-
   const snapshotAndSet = action('changestateHandler', (ev) => {
     const snapshot = createSnapshot(toJS(locationObservable.query))
     const currentlyInObservable = toJS(locationObservable)
@@ -95,6 +93,8 @@ export default ({ hashHistory, arrayFormat = 'bracket' }) => {
       set(locationObservable, snapshot)
     }
   })
+  
+  let unsubscribe = autorun(propagateQueryToLocationSearch)
 
   observe(locationObservable, (change) => {
     const { name } = change
