@@ -3,7 +3,7 @@
   "version": "0.6.5",
   "description": "minimal observable wrapper around browser location utilizing popstate event of HTML5 history api",
   "module": "dist/mobx-location.es.js",
-  "main": "dist/mobx-location.cjs.js",
+  "main": "src/mobx-location.js",
   "scripts": {
     "build": "rollup -c",
     "test": "node test/e2e.js",
